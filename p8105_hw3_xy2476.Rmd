@@ -26,7 +26,7 @@ scale_colour_discrete = scale_color_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-### Problem 1
+## Problem 1
 
 ```{r}
 data("instacart")
@@ -84,5 +84,33 @@ instacart %>%
     values_from = mean_hour
   )
 ```
+
+
+## Problem 2
+Load and tidy data. 
+final dataset should include all originally observed variables and values; have useful variable names; 
+include a weekday vs weekend variable; 
+and encode data with reasonable variable classes. 
+Describe the resulting dataset (e.g. what variables exist, how many observations, etc).
+
+```{r}
+accel_df = 
+  read_csv(
+    "./data/accel_data.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(
+    activity_1:activity_1440,
+    names_to = "minute_of_day",
+    values_to = "activity_count"
+    ) 
+ # mutate(
+   # weekday_vs_weekend = 
+      #case_when(
+        #Monday == 1 ~ "weekday",
+        #Tuesday == 1 ~ "weekday")),
+       # prez_dem == 1 ~ "dem",
+       # prez_gop == 1 ~ "gop"))
+```
+
 
 
