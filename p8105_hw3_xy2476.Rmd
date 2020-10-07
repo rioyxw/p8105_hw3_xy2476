@@ -102,14 +102,21 @@ accel_df =
     activity_1:activity_1440,
     names_to = "minute_of_day",
     values_to = "activity_count"
-    ) 
- # mutate(
-   # weekday_vs_weekend = 
-      #case_when(
+    ) %>% 
+    #mutate(
+    #select(day) %>% 
+    #weekday_vs_weekend = 
+     # case_when(
         #Monday == 1 ~ "weekday",
-        #Tuesday == 1 ~ "weekday")),
-       # prez_dem == 1 ~ "dem",
-       # prez_gop == 1 ~ "gop"))
+        #Tuesday == 1 ~ "weekday")) %>% 
+  mutate(week = as.factor(week),
+          day_id = as.factor(day_id),
+          day = as.factor(day),
+         #minute_of_day = as.factor(minute_of_day))
+  )
+         
+
+str(accel_df)
 ```
 
 
