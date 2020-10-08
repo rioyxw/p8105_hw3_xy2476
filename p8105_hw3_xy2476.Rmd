@@ -101,23 +101,60 @@ accel_df =
   pivot_longer(
     activity_1:activity_1440,
     names_to = "minute_of_day",
+    names_prefix = "activity_",
     values_to = "activity_count"
     ) %>% 
-    #mutate(
-    #select(day) %>% 
-    #weekday_vs_weekend = 
-     # case_when(
-        #Monday == 1 ~ "weekday",
-        #Tuesday == 1 ~ "weekday")) %>% 
-  mutate(week = as.factor(week),
-          day_id = as.factor(day_id),
-          day = as.factor(day),
-         #minute_of_day = as.factor(minute_of_day))
-  )
-         
+  mutate(
+    day = factor(day, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+  ) %>% 
+  mutate(
+    weekday_vs_weekend = 
+      case_when(
+        day %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday") ~ "weekday",
+        day %in% c("Saturday", "Sunday") ~ "weekend")
+    ) %>% 
+  mutate(
+    week = factor(week),
+    weekday_vs_weekend = factor(weekday_vs_weekend),
+    day_id = factor(day_id),
+    day = factor(day),
+    day = fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday")),
+    minute_of_day = as.numeric(minute_of_day)
+    ) %>% 
+  relocate(day_id, week, day, weekday_vs_weekend)
 
 str(accel_df)
 ```
+descriptio:::::
 
+
+Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate accross minutes to create a total activity variable for each day, and create a table showing these totals. Are any trends apparent?
+```{r}
+accel_df %>% 
+  group_by(week, day) %>% 
+  summarize(total_activity = sum(activity_count)) %>% 
+  pivot_wider(
+    names_from = day,
+    values_from = total_activity
+  )
+
+# We can see from the table that usually the participant has an average activity count around 400000. The first day of the first week has the least amount of activity count for that week. Week four and five's weekend have the least amount of activity. Saturdays in general have the least sum of activity count. 
+```
+
+
+
+
+
+
+
+## Problem 3
+
+Load data
+```{r}
+library(p8105.datasets)
+data("ny_noaa")
+```
+
+The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and indicating the extent to which missing data is an issue. Then, do or answer the following (commenting on the results of each):
 
 
