@@ -178,14 +178,40 @@ ny_noaa_df =
     tmax = tmax / 10,
     tmin = tmin / 10
   )
+
+ny_noaa_df %>% 
+  count(snow) %>% 
+  arrange(desc(n))
+```
+0 is the most commonly observed values. Because NY doesnt really snow...?
+
+
+Make a two-panel plot showing the average max temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
+
+how to organize data so that max temp in jan and july
+```{r}
+ny_noaa_df %>% 
+  group_by(id, year, month) %>%
+  filter(month %in% c("01", "07")) %>% 
+  summarize(
+    mean_tmax = mean(tmax)) %>% 
+  ggplot(aes(x = year, y = mean_tmax, group = id)) +
+  geom_point() +
+  geom_path() +
+  facet_grid(. ~ month)
+
+str(ny_noaa_df)
+```
+
+Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); 
+```{r}
+
+  
 ```
 
 
 
-
-
-
-
+(ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
 
 
 
