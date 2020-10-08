@@ -121,13 +121,13 @@ accel_df =
   relocate(day_id, week, day, weekday_vs_weekend)
 ```
 
+Description of new dataset:
 
-The dataset contains five weeks of accelerometer data collected on a 63 year-old male with BMI 25. This dataset contains `r nrow(accel_df)` rows and `r ncol(accel_df)` columns, so there are `r nrow(accel_df)` observations in total.  "Day_id", "week", and "day" variables are day variables to document and identify different study days. The new variable "weekday_vs_weekend" separates the study days into two categories, weekdays and weekends. The "minute_of_day" and "activity_count" store data from the original dataset activity_1 to activity_1440. "Minute_of_day" collects minute data for each day starting from the 1st minute to the last 1440th minute in a day, and "activity_count" calculates how active the participant was during each minute. 
+The dataset contains five weeks of accelerometer data collected on a 63 year-old male with BMI 25. This dataset contains `r nrow(accel_df)` rows and `r ncol(accel_df)` columns, so there are `r nrow(accel_df)` observations in total.  "Day_id", "week", and "day" variables are day variables used to document and identify different study days. The new variable "weekday_vs_weekend" separates the study days into two categories, weekdays and weekends. The "minute_of_day" and "activity_count" store data from the original dataset activity_1 to activity_1440. "Minute_of_day" collects minute data for each day starting from the 1st minute to the last 1440th minute, and "activity_count" calculates how active the participant was during each minute. 
 
 
 
-
-Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate accross minutes to create a total activity variable for each day, and create a table showing these totals. Are any trends apparent?
+Aggregate across minutes to create a total activity variable for each day, and create a table showing these totals.
 ```{r}
 accel_df %>% 
   group_by(week, day) %>% 
@@ -136,9 +136,13 @@ accel_df %>%
     names_from = day,
     values_from = total_activity
   )
-
-# We can see from the table that usually the participant has an average activity count around 400000. The participant's Tuesday to Thursday's activity count has a smaller variance compares to Monday, Saturday and Sunday. The first day of the first week has the least amount of activity count for that week. Week four and five's weekend have the least amount of activity. Saturdays in general have the least sum of activity count. 
 ```
+
+Description on trends:
+
+We can see from the table that most of the activity count is around 400000, but there is no prominent trends in general. 
+The participant's Tuesday to Thursday's activity count has a smaller variance compares to Monday, Saturday and Sunday. Saturdays have the largest variation in activity count, ranging from 1440 to 607175. Saturdays on week four and five have the least amount of activity count. It's also interesting to note that if the participants have an aggregated activity count over 600000, he will definitely have a significantly decrease in activity count the next day.
+
 
 Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.
 
