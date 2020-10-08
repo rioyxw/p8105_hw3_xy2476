@@ -164,4 +164,28 @@ The dataset contains data from New York state weather stations. This dataset con
 There are seven important variables in the dataset, weather station ID, date of observation, precipitation (tenths of mm), snowfall (mm), snow depth (mm), maximum and minimum temperature (tenths of degrees C). Each weather station may collect only a subset of these variables, and therefore the resulting dataset contains extensive missing data.
 
 
-Do some data cleaning. Create separate variables for year, month, and day. Ensure observations for temperature, precipitation, and snowfall are given in reasonable units. For snowfall, what are the most commonly observed values? Why?
+Do some data cleaning.  Ensure observations for temperature, precipitation, and snowfall are given in reasonable units. For snowfall, what are the most commonly observed values? Why?
+```{r}
+ny_noaa_df = 
+  ny_noaa %>% 
+  separate(date, into = c("year", "month", "day")) %>%
+  mutate(
+    tmax = as.numeric(tmax),
+    tmin = as.numeric(tmin),
+  ) %>% 
+  mutate(
+    prcp = prcp / 10,
+    tmax = tmax / 10,
+    tmin = tmin / 10
+  )
+```
+
+
+
+
+
+
+
+
+
+
