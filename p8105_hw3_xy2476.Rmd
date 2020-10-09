@@ -11,7 +11,7 @@ library(p8105.datasets)
 
 knitr::opts_chunk$set(
   fig.width = 6,
-  fig.asp = 6,
+  fig.asp = .6,
   out.width = "90%"
 )
 
@@ -135,7 +135,8 @@ accel_df %>%
   pivot_wider(
     names_from = day,
     values_from = total_activity
-  )
+  ) %>% 
+  knitr::kable(digits = 1)
 ```
 
 Description on trends:
@@ -144,18 +145,24 @@ We can see from the table that most of the activity count is around 400000, but 
 The participant's Tuesday to Thursday's activity count has a smaller variance compares to Monday, Saturday and Sunday. Saturdays have the largest variation in activity count, ranging from 1440 to 607175. Saturdays on week four and five have the least amount of activity count. It's also interesting to note that if the participants have an aggregated activity count over 600000, he will definitely have a significantly decrease in activity count the next day.
 
 
-Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.
+
+Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. 
 
 ```{r}
 accel_df %>% 
   ggplot(aes(x = minute_of_day, y = activity_count, color = day)) +
-  geom_point(alpha = .5) +
-  geom_smooth()
+  geom_line(alpha = 0.5) +
+  geom_point(alpha = 0.4) +
+  labs(title = "Activity across time plot",
+       x = "Minute of day",
+       y = "Activity count")
 ```
+Describe in words any patterns or conclusions you can make based on this graph:
+
 
 
 ## Problem 3
-The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and indicating the extent to which missing data is an issue. Then, do or answer the following (commenting on the results of each):
+To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and indicating the extent to which missing data is an issue. Then, do or answer the following (commenting on the results of each):
 
 Load data
 ```{r}
@@ -189,22 +196,24 @@ ny_noaa_df %>%
 0 is the most commonly observed values. Because NY doesnt really snow...?
 
 
-Make a two-panel plot showing the average max temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
+********Make a two-panel plot showing the average max temperature in January and in July in each station across years.
 
-how to organize data so that max temp in jan and july
 ```{r}
 ny_noaa_df %>% 
   group_by(id, year, month) %>%
   filter(month %in% c("01", "07")) %>% 
-  summarize(
-    mean_tmax = mean(tmax)) %>% 
-  ggplot(aes(x = year, y = mean_tmax, group = id)) +
-  geom_point() +
-  geom_path() +
-  facet_grid(. ~ month)
-
-str(ny_noaa_df)
+  summarize(mean_tmax = mean(tmax, na.rm = TRUE)) %>% 
+  ggplot(aes(x = year, y = mean_tmax, group = id, color = month)) +
+  geom_line() +
+  facet_grid(. ~ month) +
+  theme(axis.text.x = element_text(angle = 270, vjust = 0.5, hjust = 1)) +
+  labs(title = "Mean average temperature for Jan and Jul across stations and years",
+       x = "Year",
+       y = "Average max temperature")
 ```
+Is there any observable / interpretable structure? Any outliers?
+***********
+
 
 Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); 
 ```{r}
@@ -212,7 +221,10 @@ Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a
 tmax_tmin_p = 
   ny_noaa_df %>% 
   ggplot(aes(x = tmax, y = tmin)) +
-  geom_hex()
+  geom_hex() +
+  labs(title = "Max temperature vs min temperature(degree C)",
+       x = "Maximum temperature",
+       y = "Minimun temperature")
 ```
 
 (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
@@ -222,8 +234,12 @@ tmax_tmin_p =
 snowfall_p = 
   ny_noaa_df %>% 
   filter(snow > 0 & snow < 100) %>% 
-  ggplot(aes( x = year, y = snow)) +
-  geom_boxplot()
+  ggplot(aes( x = as.factor(year), y = snow)) +
+  geom_violin() +
+  theme(axis.text.x = element_text(angle = 270, vjust = 0.5, hjust = 1)) +
+  labs(title = "Snowfall values greater than 0 and less than 100 by year ",
+       x = "Year",
+       y = "Snowfall values")
 ```
 
 two-panel plot combining the two
